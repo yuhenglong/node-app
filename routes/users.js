@@ -1,9 +1,15 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-
 // express实例化对象
 const router = express.Router();
+
+// 加载model
+require('../models/user');
+const User = mongoose.model("users");
+
+
 // 登录接口
 router.get('/login', (req, res) => {
     res.render('users/login');
@@ -35,6 +41,21 @@ router.post("/register", urlencodedParser, (req, res) => {
             password: req.body.password,
             password2: req.body.password2
         });
+    } else {
+        res.send("pass");
+        // const newUser = new User({
+        //     name: req.body.name,
+        //     email: req.body.email,
+        //     password: req.body.password,
+        // })
+
+        // newUser.save().then((user) => {
+        //     req.flash("success_msg", "账号注册成功！")
+        //     res.redirect("/users/login");
+        // }).catch((err) => {
+        //     req.flash("error_msg", "账号注册失败！")
+        //     res.redirect("/users/register");
+        // })
     }
 });
 module.exports = router;
