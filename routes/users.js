@@ -1,12 +1,34 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const mongoose = require("mongoose");
+const passport = require("passport");
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 // express实例化对象
 const router = express.Router();
+
+// 加载model
+require('../models/User');
+const User = mongoose.model('users');
 // 登录接口
 router.get('/login', (req, res) => {
     res.render('users/login');
+});
+
+router.post('/login', urlencodedParser, (req, res, next) => {
+    passport.authenticate('local', {
+        successRedirect: 'ideas',
+        failureRedirect: '/users/login',
+        failureFlash: true
+    })(req, res, next);
+    // 查询数据库
+    // User.findOne({ email: req.body.email }).then((user) => {
+    //     if (!user) {
+    //         req.flash("error_msg", "用户不存在！");
+    //         res.redirect('/users/login');
+    //         return;
+    //     }
+    // })
 });
 // 注册
 router.get("/register", (req, res) => {
